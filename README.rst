@@ -22,8 +22,8 @@ Dependencies
 License
 =======
 
-Structurarium (server): AfferoGPLv3 
-Dominus: Apache 2.0
+- Structurarium (server): AfferoGPLv3 
+- Dominus: Apache 2.0
 
 
 Author
