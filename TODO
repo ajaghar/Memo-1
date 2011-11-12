@@ -1,0 +1,8 @@
+easy:
+
+- There some methods on ``dominus.client.Client`` and ``structurarium.server.Server`` that should be 
+  staticmethod of ``structure.base.Base``
+
+medium:
+
+- implement autocomplete feature in server side see http://antirez.com/post/autocomplete-with-redis.html
