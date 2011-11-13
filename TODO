@@ -1,8 +1,6 @@
 easy:
-
-- There some methods on ``dominus.client.Client`` and ``structurarium.server.Server`` that should be 
-  staticmethod of ``structure.base.Base``
+ - implement blocking operation (need python sockets)
 
 medium:
+ - use python socket instead of zmq
 
-- implement autocomplete feature in server side see http://antirez.com/post/autocomplete-with-redis.html
