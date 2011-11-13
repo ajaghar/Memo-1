@@ -5,7 +5,7 @@ sys.path.append(os.path.realpath(os.path.join(os.path.dirname(__file__), '..')))
 import zmq
 
 from message import Message
-from util import import_class
+from util import import_class, handle_response
 import exception
 
 
@@ -22,6 +22,24 @@ class Client(object):
 
         self.__load__()
 
+    def __getattribute__(self, attribute):
+        try:
+            return super(Client, self).__getattribute__(attribute)
+        except AttributeError:
+            # this method is not defined by a local structure class
+            # let's try to call it nonetheless
+            def method(self, *args):
+                message = Message(attribute, *args)
+                message = self.send_and_recv(message)
+                if message.action == 'RESPONSE':
+                    if len(message.args) == 1:
+                        return message.args[0]
+                    else:
+                        return message.args
+                else:
+                    handle_response(message)
+            return MethodType(method, self, type(self))
+
     def __add_structure__(self, structure_class):
         structure_class.init(self)
         for action_name in dir(structure_class):
@@ -37,114 +55,29 @@ class Client(object):
             structure_class_module_name = structure_name.lower()
             structure_class_name = structure_class_module_name.capitalize()
             structure_class_path = 'dominus.structure.%s.%s' % (structure_class_module_name, structure_class_name)
-            print structure_class_path
             structure_class = import_class(structure_class_path)
-            self.__add_structure__(structure_class)
+            if structure_class is not None:
+                self.__add_structure__(structure_class)
 
     def send_and_recv(self, message):
         self.socket.send(message.dumps())
         message = Message.loads(self.socket.recv())
         return message
 
-    def DEL(self, *args):
-        message = Message('DEL', *args)
-        message = self.send_and_recv(message)
-        if message.action == 'RESPONSE':
-            pass
-        else:
-            handle_response(message)
-
-    def EXISTS(self, key):
-        message = Message('EXISTS', key)
-        message = self.send_and_recv(message)
-        if message.action == 'RESPONSE':
-            return message.args[0]
-        else:
-            handle_response(message)
-
-    def EXPIRE(self, key, seconds):
-        message = Message('EXPIRE', key, seconds)
-        message = self.send_and_recv(message)
-        if message.action == 'RESPONSE':
-            return message.args[0]
-        else:
-            handle_response(message)
-
-    def EXPIREAT(self, key, timestamp):
-        message = Message('EXPIREAT', key, timestamp)
-        message = self.send_and_recv(message)
-        if message.action == 'RESPONSE':
-            return
-        else:
-            handle_response(message)
-
-    def KEYS(self, pattern=None):
-        pattern = '' if pattern is None else pattern
-        message = Message('KEYS', pattern)
+    def STRUCTURES(self):
+        message = Message('STRUCTURES')
         message = self.send_and_recv(message)
         if message.action == 'RESPONSE':
             return message.args
         else:
             handle_response(message)
 
-    def PERSIST(self, key):
-        message = Message('PERSIST', key)
-        message = self.send_and_recv(message)
-        if message.action == 'RESPONSE':
-            pass
-        else:
-            handle_response(message)
-
-    def RANDOMKEY(self):
-        message = Message('RANDOMEKEY')
-        message = self.send_and_recv(message)
-        if message.action == 'RESPONSE':
-            return message.args[0]
-        else:
-            handle_response(message)
-
-    def RENAME(self, key, newkey):
-        message = Message('RENAME', key, newkey)
-        message = self.send_and_recv(message)
-        if message.action == 'RESPONSE':
-            pass
-        else:
-            handle_response(message)
-
-    def RENAMENX(self, key, newkey):
-        message = Message('RENAMENX', key, newkey)
-        message = self.send_and_recv(message)
-        if message.action == 'RESPONSE':
-            pass
-        else:
-            handle_response(message)
-
-    def STRUCTURES(self):
-        message = Message('STRUCTURES')
-        message = self.send_and_recv(message)
-        if message.action == 'RESPONSE':
-            return message.args[0]
-        else:
-            handle_response(message)
-
-    def TTL(self, key):
-        message = Message('TTL', key)
-        message = self.send_and_recv(message)
-        if message.action == 'RESPONSE':
-            return message.args[0]
-        else:
-            handle_response(message)
-
-    def STRUCTURE(self, key):
-        message = Message('STRUCTURE', key)
-        message = self.send_and_recv(message)
-        if message.action == 'RESPONSE':
-            return message.args[0]
-        else:
-            handle_response(message)
-
 
 if __name__ == '__main__':
     client = Client('127.0.0.1', port=8000, publisher_port=8001)
-    client.SETSTRING('FOO', 'BARBAZ')
-    print client.GET('FOO')
+    client.SUGGEST('A')
+    client.SUGGESTADD('A', 'FOO', 1)
+    client.SUGGESTADD('A', 'FOOBAR', 1)
+    client.SUGGESTADD('A', 'FOOBAZ', 1)
+    client.SUGGESTADD('A', 'FOOBARBAZ', 1)
+    print client.SUGGESTSEARCH('A', 'FOO', 2)
