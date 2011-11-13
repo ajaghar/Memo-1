@@ -1,6 +1,8 @@
 easy:
  - implement blocking operation (need python sockets)
+ - implement Sortedset
+ - remplace pyzmq by a pure python version of zmq
+ - do a benchmark cpython vs pypy vs redis
 
 medium:
  - use python socket instead of zmq
-
