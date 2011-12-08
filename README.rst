@@ -8,7 +8,7 @@ Kezako Structurarium ?
 
 Structurarium is a free-software, networked, in-memory, key-value store written in python.
 
-Structurarium is the name of the server and the project. Dominus is python client for Structurarium.
+Structurarium is the name of the server and the project. Rex is python client for Structurarium.
 
 
 Dependencies
@@ -23,7 +23,7 @@ License
 =======
 
 - Structurarium (server): AfferoGPLv3 
-- Dominus: Apache 2.0
+- Rex: Apache 2.0
 
 
 Author

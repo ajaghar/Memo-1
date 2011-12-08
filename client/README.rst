@@ -1,12 +1,13 @@
-=======
-Dominus
-=======
+===
+Rex
+===
 
 
 Kezako Dominus ?
 ======================
 
-Dominus est python client for Structurarium.
+Rex is a Python client for Structurarium.
+
 
 Dependencies
 ============

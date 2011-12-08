@@ -10,11 +10,9 @@ import zmq
 
 from message import Message
 from util import check_if_key_exists
-from structure.string import String
-from structure.publisher import Publisher
 
 
-class Server(object):
+class Structurarium(object):
 
     def __init__(self, port):
         self.port = port
@@ -146,17 +144,3 @@ class Server(object):
         
     def STRUCTURES(self):
         return self._structures
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Structurarium')
-    parser.add_argument('port', type=int, help='port number on which to run the server')
-    parser.add_argument('pubsub_port', type=int, help='port number on which to run the pubsub server')
-
-    args = parser.parse_args()
-
-    server = Server(args.port)
-    
-    server.add_structure(String)
-    server.add_structure(Publisher, port=args.pubsub_port)
-    server.start()

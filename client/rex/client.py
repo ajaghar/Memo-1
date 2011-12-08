@@ -9,8 +9,8 @@ from util import import_class, handle_response
 import exception
 
 
-class Client(object):
-    
+class Rex(object):
+
     def __init__(self, location, port, **kwargs):
         self.options = kwargs
         self.options['location'] = location
@@ -24,7 +24,7 @@ class Client(object):
 
     def __getattribute__(self, attribute):
         try:
-            return super(Client, self).__getattribute__(attribute)
+            return super(Rex, self).__getattribute__(attribute)
         except AttributeError:
             # this method is not defined by a local structure class
             # let's try to call it nonetheless
@@ -74,7 +74,7 @@ class Client(object):
 
 
 if __name__ == '__main__':
-    client = Client('127.0.0.1', port=8000, publisher_port=8001)
+    client = Rex('127.0.0.1', port=8000, publisher_port=8001)
     client.SUGGEST('A')
     client.SUGGESTADD('A', 'FOO', 1)
     client.SUGGESTADD('A', 'FOOBAR', 1)
