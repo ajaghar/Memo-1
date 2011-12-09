@@ -3,8 +3,9 @@ from util import check_if_key_exists
 
 
 def iter_trigrams(string):
-    for start in range(len(strings))[-2]:
-        yield trigram = string[start:start+3]
+    for start in range(len(string))[:-2]:
+        trigram = string[start:start+3]
+        yield trigram
 
 
 class Suggest(Base):
@@ -23,23 +24,31 @@ class Suggest(Base):
                     return 'WRONG VALUE'
         else:
             server.dict[key] = Suggest(server, key)
+        value = server.dict[key]
         for string in strings:
             if len(string) < 3:
                 continue
             else:
-                for trigram in iter_trigrams(string)
-                    if not trigram in self.dict:
-                        self.trigrams[trigram] = list()
-                    self.trigrams[trigram].append(string)
+
+                for trigram in iter_trigrams(string):
+                    if not trigram in value.trigrams:
+                        value.trigrams[trigram] = list()
+                    value.trigrams[trigram].append(string)
         return 'OK'
 
     @check_if_key_exists
     def SUGGEST(self, string, limit=10):
         suggestions = dict()
         for trigram in iter_trigrams(string):
-            strings = self.trigrams[trigram]
+            strings = self.trigrams.get(trigram, [])
             for s in strings:
                 if not s in suggestions:
                     suggestions[s] = 0
                 suggestions[s] += 1
-        return sorted(suggestions.keys(), key=lambda x: suggestions[x], reverse=True)[:10]
+        suggestions = sorted(
+            suggestions.keys(),
+            key=lambda x: suggestions[x],
+            reverse=True
+        )
+        suggestions = suggestions[:10]
+        return suggestions

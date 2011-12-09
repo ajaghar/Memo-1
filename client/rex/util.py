@@ -16,6 +16,6 @@ def import_class(class_path):
 
 def handle_response(message):
     if message.action == 'ERROR':
-        raise exception.DominusServerError(message.args)
+        raise exception.RexServerError(message.args)
     else:
-        raise exception.DominusBadResponse(message)
+        raise exception.RexBadResponse(message)
