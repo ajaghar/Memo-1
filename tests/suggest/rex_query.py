@@ -5,15 +5,6 @@ from rex.rex import Rex
 
 rex = Rex('127.0.0.1', port=8000)
 
-rex.SUGGESTADD('SPELLCHECKER')
-
-words = open('wordlist.txt')
-for word in words:
-    rex.SUGGESTADD('SPELLCHECKER', word.strip())
-
-words.close()
-
-
 missplellings_w_corrections_file = open('missplellings_w_corrections.txt')
 missplellings_w_corrections = missplellings_w_corrections_file.read()
 missplellings_w_corrections_file.close()

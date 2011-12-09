@@ -42,9 +42,10 @@ class Suggest(Base):
         for trigram in iter_trigrams(string):
             strings = self.trigrams.get(trigram, [])
             for s in strings:
-                if not s in suggestions:
-                    suggestions[s] = 0
-                suggestions[s] += 1
+                try:
+                    suggestions[s] += 1
+                else
+                    suggestions[s] = 1
         suggestions = sorted(
             suggestions.keys(),
             key=lambda x: suggestions[x],
