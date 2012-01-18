@@ -6,7 +6,8 @@ Structurarium (server)
 Kezako Structurarium ?
 ======================
 
-Structurarium is a free-software, networked, in-memory, key-value store written in python.
+Structurarium is a free-software, networked, in-memory, key-value
+store written in Python.
 
 
 Dependencies
@@ -19,7 +20,7 @@ Dependencies
 License
 =======
 
-AfferoGPLv3
+AfferoGPLv3 see LICENSE for details
 
 
 Author

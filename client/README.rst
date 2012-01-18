@@ -3,8 +3,8 @@ Rex
 ===
 
 
-Kezako Dominus ?
-======================
+Kezako Rex ?
+============
 
 Rex is a Python client for Structurarium.
 
@@ -20,7 +20,7 @@ Dependencies
 License
 =======
 
-Apache 2.0
+AfferoGPLv3 see LICENSE for details
 
 
 Author
