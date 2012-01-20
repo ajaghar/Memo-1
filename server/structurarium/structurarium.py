@@ -28,7 +28,7 @@ class Structurarium(object):
         while True:
             message = self.socket.recv()
             message = Message.loads(message)
-            
+
             # fetch method and call it see :method:`Server._add_structure`
             method = getattr(self, message.action, None)
             if method is not None:
@@ -55,12 +55,12 @@ class Structurarium(object):
                     response = Message('ERROR', 'no such action')
             message = response.dumps()
             self.socket.send(message)
- 
+
     def add_structure(self, structure_class, **kwargs):
         """Adds ``structure_class`` as an available structure in the instance. The 
         structure should at least provide a staticmethod to initialise the key"""
         structure_class.init(self, **kwargs)
-        
+
         for action_name in dir(structure_class):
             if action_name.isupper():
                 function = getattr(structure_class, action_name)
@@ -141,6 +141,6 @@ class Structurarium(object):
                 self.dict[newkey] = value
                 return 'OK'
         return 'KEY DOES NOT EXITS'
-        
+
     def STRUCTURES(self):
         return self._structures
