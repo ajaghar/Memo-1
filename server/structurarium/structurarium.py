@@ -6,7 +6,7 @@ sys.path.append(os.path.realpath(os.path.join(os.path.dirname(__file__), '..')))
 from types import MethodType, FunctionType
 from random import choice
 
-import zmq
+from routines.zmq import zmq
 
 from message import Message
 from util import check_if_key_exists
@@ -26,7 +26,7 @@ class Structurarium(object):
     def start(self):
         print 'Server running on 127.0.0.1:%s' % self.port
         while True:
-            message = self.socket.recv()
+            message = yield self.socket.recv()
             message = Message.loads(message)
 
             # fetch method and call it see :method:`Server._add_structure`
@@ -54,9 +54,9 @@ class Structurarium(object):
                 else:
                     response = Message('ERROR', 'no such action')
             message = response.dumps()
-            self.socket.send(message)
+            yield self.socket.send(message)
 
-    def add_structure(self, structure_class, **kwargs):
+    def add(self, structure_class, **kwargs):
         """Adds ``structure_class`` as an available structure in the instance. The 
         structure should at least provide a staticmethod to initialise the key"""
         structure_class.init(self, **kwargs)
@@ -123,7 +123,7 @@ class Structurarium(object):
             value = self.dict[key]
             if not value.id_dead:
                 del self.dict[key]
-                self.dict[newkey] = value
+                self.dictp[newkey] = value
                 return 'OK'
         return 'KEY DOES NOT EXITS'
 
