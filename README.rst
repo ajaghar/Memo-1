@@ -22,7 +22,7 @@ Dependencies
 License
 =======
 
-- Structurarium (server): AfferoGPLv3 
+- Structurarium (server): AfferoGPLv3
 - Rex: Apache 2.0
 
 
