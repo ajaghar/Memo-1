@@ -44,7 +44,7 @@ class Suggest(Base):
             for s in strings:
                 try:
                     suggestions[s] += 1
-                else:
+                except:
                     suggestions[s] = 1
         suggestions = sorted(
             suggestions.keys(),
