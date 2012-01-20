@@ -23,7 +23,7 @@ License
 =======
 
 - Structurarium (server): AfferoGPLv3
-- Rex: Apache 2.0
+- Rex: AfferoGPLv3
 
 
 Author
