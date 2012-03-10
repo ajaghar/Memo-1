@@ -75,8 +75,9 @@ class Rex(object):
 
 if __name__ == '__main__':
     client = Rex('127.0.0.1', port=8000, publisher_port=8001)
-    client.SUGGESTADD('A', 'FOO')
-    client.SUGGESTADD('A', 'FOOBAR')
-    client.SUGGESTADD('A', 'FOOBAZ')
-    client.SUGGESTADD('A', 'FOOBARBAZ')
-    print client.SUGGEST('A', 'FOO')
+    client.SUGGEST('A')
+    client.SUGGESTADD('A', 'FOO', 1)
+    client.SUGGESTADD('A', 'FOOBAR', 1)
+    client.SUGGESTADD('A', 'FOOBAZ', 1)
+    client.SUGGESTADD('A', 'FOOBARBAZ', 1)
+    print client.SUGGESTSEARCH('A', 'FOO', 2)
