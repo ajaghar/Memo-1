@@ -1,5 +1,6 @@
 from base import Base
 from util import check_if_key_exists
+from util import write
 
 
 def iter_trigrams(string):
@@ -15,6 +16,7 @@ class Suggest(Base):
         self.trigrams = dict()
 
     @staticmethod
+    @write
     def SUGGESTADD(server, key, *strings):
         if key in server.dict:
             if server.dict[key].is_dead:

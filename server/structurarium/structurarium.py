@@ -10,52 +10,85 @@ import zmq
 
 from message import Message
 from util import check_if_key_exists
+from pq import PQ
 
 
 class Structurarium(object):
 
-    def __init__(self, port):
-        self.port = port
+    def __init__(self, port, persistent_queue_filename=None):
+        self.persistent_queue_filename = persistent_queue_filename
         self.dict = dict()
+
+        self.port = port
+
+        # FIXME: why this is it prepended with an underscore ?
         self._structures = []
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)
         self.location = 'tcp://*:%s' % port
         self.socket.bind(self.location)
 
-    def start(self):
-        print 'Server running on 127.0.0.1:%s' % self.port
-        while True:
-            message = self.socket.recv()
-            message = Message.loads(message)
-
-            #
-            # fetch method and call it see :method:`Server._add_structure`
-            #
-            method = getattr(self, message.action, None)
-            if method is not None:
-                # it's a structuarium method
-                value = method(*message.args)
-                if isinstance(value, list):
-                    response = Message('RESPONSE', *value)
-                else:
-                    response = Message('RESPONSE', value)
+    def play(self, message):
+        """Executes the action of the message if possible and return
+        a response with a flag to tell the callee whether this is a write
+        operation"""
+        #
+        # fetch method and call it see :method:`Server._add_structure`
+        #
+        print message
+        method = getattr(self, message.action, None)
+        write = False
+        if method is not None:
+            write = getattr(method, 'write', False)
+            # it's a structuarium method
+            value = method(*message.args)
+            if isinstance(value, list):
+                response = Message('RESPONSE', *value)
             else:
-                # it might be a value method
-                key = message.args[0]
-                if key in self.dict:
-                    value = self.dict[key]
-                    method = getattr(value, message.action, None)
-                    if method is not None:
-                        value = method(*message.args[1:])
-                        if isinstance(value, list):
-                            response = Message('RESPONSE', *value)
-                        else:
-                            response = Message('RESPONSE', value)
+                response = Message('RESPONSE', value)
+        else:
+            # it might be a value method
+            key = message.args[0]
+            if key in self.dict:
+                value = self.dict[key]
+                method = getattr(value, message.action, None)
+                write = getattr(method, 'write', False)
+                if method is not None:
+                    value = method(*message.args[1:])
+                    if isinstance(value, list):
+                        response = Message('RESPONSE', *value)
                     else:
-                        response = Message('ERROR', 'no such action')
+                        response = Message('RESPONSE', value)
                 else:
                     response = Message('ERROR', 'no such action')
+            else:
+                response = Message('ERROR', 'no such action')
+        return response, write
+
+    def start(self):
+        print 'Server running on 127.0.0.1:%s' % self.port
+
+        # settings up persistence
+        if self.persistent_queue_filename is not None:
+            print 'Setting up persistent queue'
+            self.persistent_queue = PQ(self.persistent_queue_filename)
+            print 'Playing stored messages'
+            for raw_message in self.persistent_queue.read():
+                message = Message.loads(raw_message)
+                self.play(message)
+            print 'Persistent queue loading finished'
+        else:
+            self.persistent_queue = None
+
+        while True:
+            raw_message = self.socket.recv()
+            message = Message.loads(raw_message)
+
+            response, write = self.play(message)
+
+            if write:
+                self.persistent_queue.write(raw_message)
+
             message = response.dumps()
             self.socket.send(message)
 
