@@ -35,7 +35,6 @@ class Structurarium(object):
         #
         # fetch method and call it see :method:`Server._add_structure`
         #
-        print message
         method = getattr(self, message.action, None)
         write = False
         if method is not None:
