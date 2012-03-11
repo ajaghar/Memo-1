@@ -52,3 +52,13 @@ class Base(object):
     @check_if_key_exists
     def TTL(self):
         return self.ttl
+
+    @check_if_key_exists
+    def EXPIRE(self, seconds):
+        self.ttl = seconds
+        return value.expiration_time 
+
+    @check_if_key_exists
+    def EXPIREAT(self, timestamp):
+        self.expire_at(timestamp)
+        return 'OK'
