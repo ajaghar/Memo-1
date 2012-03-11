@@ -2,7 +2,7 @@ import msgpack
 
 
 class Message(object):
-    
+
     def __init__(self, action, *args):
         self.action = action
         self.args = args
