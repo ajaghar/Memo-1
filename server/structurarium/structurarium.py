@@ -29,9 +29,12 @@ class Structurarium(object):
             message = self.socket.recv()
             message = Message.loads(message)
 
+            #
             # fetch method and call it see :method:`Server._add_structure`
+            #
             method = getattr(self, message.action, None)
             if method is not None:
+                # it's a structuarium method
                 value = method(*message.args)
                 if isinstance(value, list):
                     response = Message('RESPONSE', *value)
@@ -77,17 +80,6 @@ class Structurarium(object):
 
     def EXISTS(self, key):
         return key in self.dict
-
-    @check_if_key_exists
-    def EXPIRE(self, key, seconds):
-        value = self.dict[key]
-        value.ttl = seconds
-        return value.expiration_time 
-
-    @check_if_key_exists
-    def EXPIREAT(self, key, timestamp):
-        value.expire_at(timestamp)
-        return 'OK'
 
     def KEYS(self, pattern=None):
         if pattern is None:
