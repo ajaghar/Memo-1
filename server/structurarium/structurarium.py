@@ -60,8 +60,9 @@ class Structurarium(object):
             self.socket.send(message)
 
     def add_structure(self, structure_class, **kwargs):
-        """Adds ``structure_class`` as an available structure in the instance. The 
-        structure should at least provide a staticmethod to initialise the key"""
+        """Adds ``structure_class`` as an available structure in the
+        instance. The structure should at least provide a staticmethod
+        to initialise the key"""
         structure_class.init(self, **kwargs)
 
         for action_name in dir(structure_class):
