@@ -80,9 +80,11 @@ class Structurarium(object):
         return 'OK'
 
     def EXISTS(self, key):
+        # FIXME: the value could be dead
         return key in self.dict
 
     def KEYS(self, pattern=None):
+        # FIXME: the values could be dead
         if pattern is None:
             return self.dict.keys()
         matched = []
@@ -114,6 +116,7 @@ class Structurarium(object):
         return 'KEY DOES NOT EXITS'
 
     def RENAMENX(self, key, newkey):
+        # FIXME: the value could be dead
         if key == newkey:
             return None
         if key in self.dict:
