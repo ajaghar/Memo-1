@@ -93,13 +93,6 @@ class Structurarium(object):
                     matched.append(key)
         return matched
 
-    @check_if_key_exists
-    def PERSIST(self, key):
-        value = self.dict[key]
-        if not value.is_dead:
-            value.max_age = None
-            return 'OK'
-
     def RANDOMKEY(self):
         # FIXME the value could be dead...
         keys = self.dict.keys()
