@@ -62,3 +62,9 @@ class Base(object):
     def EXPIREAT(self, timestamp):
         self.expire_at(timestamp)
         return 'OK'
+
+    @check_if_key_exists
+    def PERSIST(self):
+        if not self.is_dead:
+            value.max_age = None
+            return 'OK'
