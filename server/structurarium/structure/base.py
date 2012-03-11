@@ -4,7 +4,7 @@ from util import check_if_key_exists
 
 
 class Base(object):
-    
+
     def __init__(self, server, key):
         self.server = server
         self.key = key
@@ -14,7 +14,7 @@ class Base(object):
     @classmethod
     def structure_name(cls):
         return cls.__name__.upper()
-        
+
     @classmethod
     def init(cls, server):
         server._structures.append(cls.structure_name())
@@ -32,7 +32,7 @@ class Base(object):
             return self.expiration_time - time()
         else:
             return None
-    
+
     ttl = property(get_ttl, set_ttl)
 
     def persist(self):
