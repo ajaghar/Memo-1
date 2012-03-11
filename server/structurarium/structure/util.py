@@ -5,3 +5,8 @@ def check_if_key_exists(function):
             return 'KEY DOES NOT EXISTS'
         return function(*args)
     return wrapper
+
+
+def write(function):
+    function.write = True
+    return function
