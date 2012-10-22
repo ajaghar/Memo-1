@@ -1,10 +1,8 @@
 #!/usr/bin/env python
-import argparse
-
-from structurarium.structurarium import Structurarium
+from memo.memo import Memo
 from structurarium.structure.suggest import Suggest
 
 
-server = Structurarium(port=8000, persistent_queue_filename='/tmp/suggest.pq')
+server = Memo(address='127.0.0.1', port=8008)
 server.add_structure(Suggest)
 server.start()

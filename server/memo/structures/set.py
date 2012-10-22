@@ -8,7 +8,7 @@ class Set(Base):
         super(Set, self).__init__(server, key)
         self.set = set()
 
-    @staticmethod:
+    @staticmethod
     def SADD(server, key, *members):
         if key in server.dict:
             value = server.dict[key]
@@ -24,7 +24,7 @@ class Set(Base):
         for member in members:
             server.dict[key].add(member)
         return len(server.dict[key]) - l
-                    
+
     @check_if_key_exists
     def SCARD(self):
         return len(self.set)

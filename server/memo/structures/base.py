@@ -17,7 +17,7 @@ class Base(object):
 
     @classmethod
     def init(cls, server):
-        server._structures.append(cls.structure_name())
+        server.structures.append(cls.structure_name())
 
     def expire_at(self, timestamp):
         self.expiration_time = timestamp

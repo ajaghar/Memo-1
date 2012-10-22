@@ -55,6 +55,15 @@ class List(Base):
             return 'KEY DOES NOT EXISTS'
 
     @staticmethod
+    def LSET(server, key, *values):
+        server.dict[key] = List(server, key)
+        server.value = values
+
+    @check_if_key_exists
+    def GET(self):
+        return self.value
+
+    @staticmethod
     def LPOPRPUSH(server, source, destination):
         if source in server.dict:
             source_value = server.dict[source]
@@ -70,7 +79,7 @@ class List(Base):
                         destination_value.value.insert(0, tail)
                         return head
         return 'KEY DOES NOT EXISTS'
-    
+
     @check_if_key_exists
     def LINDEX(self, index):
         return self.value[index]
@@ -127,7 +136,7 @@ class List(Base):
     @staticmethod
     def RPUSH(server, key, *values):
         if key in server.dict:
-            if not server.dict[key.is_dead:
+            if not server.dict[key].is_dead:
                 server.dict[key] = List(server, key)
         else:
             server.dict[key] = List(server, key)
@@ -138,7 +147,7 @@ class List(Base):
     @staticmethod
     def RPUSHX(server, key, *values):
         if key in server.dict:
-            if not server.dict[key.is_dead:
+            if not server.dict[key].is_dead:
                 return 'KEY DOES NOT EXISTS'
             else:
                 return self.RPUSH(server, key, *values)
@@ -148,7 +157,7 @@ class List(Base):
     @staticmethod
     def LPUSH(server, key, *values):
         if key in server.dict:
-            if not server.dict[key.is_dead:
+            if not server.dict[key].is_dead:
                 server.dict[key] = List(server, key)
         else:
             server.dict[key] = List(server, key)
@@ -159,7 +168,7 @@ class List(Base):
     @staticmethod
     def LPUSHX(server, key, *values):
         if key in server.dict:
-            if not server.dict[key.is_dead:
+            if not server.dict[key].is_dead:
                 return 'KEY DOES NOT EXISTS'
             else:
                 return self.LPUSH(server, key, *values)
