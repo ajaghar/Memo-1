@@ -5,7 +5,7 @@ import re
 from types import MethodType
 from types import FunctionType
 
-from multiprocessing.connection import Listener
+from util import ServerSocket
 
 
 class Memo(object):
@@ -47,15 +47,14 @@ class Memo(object):
         return response
 
     def start(self):
-        print 'Server running on %s:%s' % (self.address, self.port)
-
-        listener = Listener((self.address, self.port), family='AF_INET')
-
+        sock = ServerSocket(
+            self.address,
+            self.port,
+        )
         while True:
-            connection = listener.accept()
-            message = connection.recv()
+            message = sock.recv()
             response = self.play(message)
-            connection.send(response)
+            sock.send(response)
 
     def add_structure(self, structure_class, **kwargs):
         """Adds ``structure_class`` as an available structure in the

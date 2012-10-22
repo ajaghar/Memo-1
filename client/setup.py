@@ -9,7 +9,7 @@ __doc__ = 'see https://github.com/amirouche/Memo'
 
 setup(
     name='memo-client',
-    version='0.1',
+    version='0.2',
     url='https://github.com/amirouche/Memo',
     license='LGPL',
     author='Amirouche Boubekki',

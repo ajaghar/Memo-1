@@ -1,9 +1,8 @@
 from types import FunctionType
 from types import MethodType
-from multiprocessing.connection import Client
-
 
 from exception import MemoServerError
+from util import ClientSocket
 
 
 class MemoClient(object):
@@ -30,23 +29,10 @@ class MemoClient(object):
                     bound_action_method = MethodType(function, self, type(self))
                     setattr(self, action_name, bound_action_method)
 
-
     def send_and_recv(self, message):
-        connection = Client(self.address, family='AF_INET')
-        connection.send(message)
-        response = connection.recv()
-        connection.close()
+        sock = ClientSocket(self.address)
+        response = sock.send_and_recv(message)
         if response[0] == 'RESPONSE':
             return response[1]
         else:
             raise MemoServerError(response[1])
-
-
-if __name__ == '__main__':
-    client = Memo('127.0.0.1', port=8000, publisher_port=8001)
-    client.SUGGEST('A')
-    client.SUGGESTADD('A', 'FOO', 1)
-    client.SUGGESTADD('A', 'FOOBAR', 1)
-    client.SUGGESTADD('A', 'FOOBAZ', 1)
-    client.SUGGESTADD('A', 'FOOBARBAZ', 1)
-    print client.SUGGESTSEARCH('A', 'FOO', 2)

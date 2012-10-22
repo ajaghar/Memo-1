@@ -19,7 +19,7 @@ __doc__ = 'see https://github.com/amirouche/Memo'
 
 setup(
     name='memo',
-    version='0.1',
+    version='0.2',
     url='https://github.com/amirouche/Memo',
     license='AGPL',
     author='Amirouche Boubekki',
