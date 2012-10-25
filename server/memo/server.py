@@ -5,12 +5,15 @@ import re
 from types import MethodType
 from types import FunctionType
 
+from setproctitle import setproctitle
+
 from util import ServerSocket
 
 
 class Memo(object):
 
     def __init__(self, address, port):
+        setproctitle('memo')
         self.address = address
         self.port = port
         self.dict = dict()
@@ -22,6 +25,7 @@ class Memo(object):
         #
         # fetch method and call it see :method:`Server._add_structure`
         #
+        print message
         method = getattr(self, message[0], None)
         if method is not None:
             # it's a main dict method method aka. server method
@@ -38,7 +42,7 @@ class Memo(object):
                     value = self.dict[key]
                     method = getattr(value, message[0], None)
                     if method is not None:
-                        value = method(message[0][1:])
+                        value = method(*message[1][1:])
                         response = ('RESPONSE', value)
                     else:
                         response = ('ERROR', 'no such command')
