@@ -25,7 +25,6 @@ class Memo(object):
         #
         # fetch method and call it see :method:`Server._add_structure`
         #
-        print message
         method = getattr(self, message[0], None)
         if method is not None:
             # it's a main dict method method aka. server method
