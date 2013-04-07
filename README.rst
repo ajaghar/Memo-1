@@ -3,22 +3,21 @@ Memo
 ====
 
 
-Kezako Memo ?
-=============
-
-Memo is a free-software, networked, in-memory, key-value store written in python.
-Yes it's a Redis clone but scriptable in Python!
-
-
 - tested with python >= 2.7
 
 
-Documentation
--------------
+Kezako Memo ?
+=============
 
-Memo has no executable you have to build one yourself using don't panik
-it's really easy you have to use the ``memo.Memo`` class and register
-the structures you need, here is an example Memo server::
+Memo is a networked, in-memory, key-value store written in Python.
+Yes it's a Redis clone scriptable in Python!
+
+
+Documentation
+=============
+
+Memo has no executable you have to build one yourself - don't panik it's really easy - using
+``memo.Memo`` class and by registering the structures you need, here is an example Memo server::
 
   from memo import Memo
   from memo.structures.suggest import Suggest
@@ -34,14 +33,14 @@ in ``memo.structures.suggest``.
 So how to use it
 ----------------
 
-Redis before scripting was implemented you were implementing complexe
-the data-structures outside of Redis by making calls to the needed COMMANDS.
+Redis, before scripting was implemented, you were implementing complex
+data-structures outside of Redis by making calls to the needed COMMANDS.
 In Memo you won't do that. Instead you build structures classes that will be the
 entry points of your application. The benefit is similar to Redis scripting you
-won't need the same number of network round-trip to do the achieve the same,
-but this will be done using Python.
+won't need the same number of network round-trip to achieve the same and this will
+be done using Python.
 
-Creating a new datastructure is straightforward, see the following example FIFO 
+Creating a new datastructure is straightforward, see the following example FIFO
 datastructure::
 
   from memo.structures.base import Base
@@ -72,7 +71,7 @@ datastructure::
           return 'OK'
 
       @check_if_key_exists
-      def POP(self):
+      def PICK(self):
           value = self.fifo[0]
           self.fifo.remove(value)
           return value
@@ -84,13 +83,13 @@ This data structure has 2 methods:
   If the requested key doesn't exists or expired, it create a new FIFO and add
   the value. Structures staticmethod must have a unique name among all the 
   structures registred against a Memo server.
-- ``POP`` will return the first value of the FIFO if the FIFO did not expire.
+- ``PICK`` will return the first value of the FIFO if the FIFO did not expire.
 
 This structure can be used in the client like so::
 
   client.FIFOADD('task queue', 42)
   client.FIFOADD('task queue', 42, 43)
-  client.POP('task queue')
+  client.PICK('task queue')
 
 The client doesn't discover the available methods, it sends every COMMAND to 
 the server and the servers answers a tuple with the first value being 
@@ -104,11 +103,11 @@ fact reuse structures registred against the server but this methods are the
 only methods that the client will need to call. This is usefull if you need 
 to make use of expiration.
 
-For instance the following data-structure use ``memo.structures.List`` to 
-store and retrieve search results for a given search index. Since we are in 
-Python we can use any Python library, given a ``search(index, query)`` function that returns 
-a list of dictionnary describing search results, a search results cache can be 
-implemented using the following class:
+For instance the following data-structure use ``memo.structures.List`` to
+store and retrieve search results for a given search index. Since we are in
+Python we can use any Python library, given a ``search(index, query)`` function that returns
+a list of dictionnary describing search results, a search results cache can be
+implemented using the following class::
 
   from memo.structures.base import Base
   from util import check_if_key_exists
@@ -141,7 +140,6 @@ Link
 ====
 
 - `forge <https://github.com/amirouche/Memo>`_
-- `documentation <http://memo.readthedocs.org/>`_
 
 Author
 ======
