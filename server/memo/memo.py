@@ -1,21 +1,14 @@
 #!/usr/bin/env python
-from random import choice
 import re
+from random import choice
 
 from types import MethodType
 from types import FunctionType
 
-from setproctitle import setproctitle
-
-from util import ServerSocket
-
 
 class Memo(object):
 
-    def __init__(self, address, port):
-        setproctitle('memo')
-        self.address = address
-        self.port = port
+    def __init__(self):
         self.dict = dict()
         self.structures = []
 
@@ -48,16 +41,6 @@ class Memo(object):
                 else:
                     response = ('ERROR', 'no such command')
         return response
-
-    def start(self):
-        sock = ServerSocket(
-            self.address,
-            self.port,
-        )
-        while True:
-            message = sock.recv()
-            response = self.play(message)
-            sock.send(response)
 
     def add_structure(self, structure_class, **kwargs):
         """Adds ``structure_class`` as an available structure in the
