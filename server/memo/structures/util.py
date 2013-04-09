@@ -1,3 +1,6 @@
+from __pypy__.thread import atomic
+
+
 def check_if_key_exists(function):
     def wrapper(*args):
         self = args[0]
@@ -9,4 +12,11 @@ def check_if_key_exists(function):
 
 def write(function):
     function.write = True
+    return function
+
+
+def with_atomic(function):
+    def wrapper(*args):
+        with atomic:
+            return function(*args)
     return function

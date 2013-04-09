@@ -1,4 +1,4 @@
-import thread
+from __pypy__.thread import atomic
 import struct
 import cPickle
 
@@ -41,7 +41,7 @@ class Worker(object):
     def start(self):
         cnx = None
         while self.running:
-            with thread.atomic:
+            with atomic:
                 if self.server.queue:
                     cnx = self.server.queue.pop()
             if cnx:
