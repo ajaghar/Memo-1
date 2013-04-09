@@ -1,4 +1,6 @@
 from __pypy__.thread import atomic
+
+import socket
 import struct
 import cPickle
 
@@ -45,5 +47,9 @@ class Worker(object):
                 if self.server.queue:
                     cnx = self.server.queue.pop()
             if cnx:
-                command = recv(cnx)
-                send(cnx, self.memo.play(command))
+                try:
+                    command = recv(cnx)
+                    send(cnx, self.memo.play(command))
+                except socket.error:
+                    cnx.close()  # FIXME: log this
+                cnx = None

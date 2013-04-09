@@ -36,4 +36,5 @@ class ClientSocket:
                 size = struct.unpack('L', msg[:self.LONGSIZE])[0]
                 msg = msg[self.LONGSIZE:]
             if size and len(msg) == size:
+                self.sock.close()
                 return cPickle.loads(msg)

@@ -1,6 +1,7 @@
+from __pypy__.thread import atomic
+
 from base import Base
 from util import write
-from util import with_atomic
 from util import check_if_key_exists
 
 
@@ -18,34 +19,34 @@ class Suggest(Base):
 
     @staticmethod
     @write
-    @with_atomic
     def SUGGESTADD(server, key, *strings):
-        if key in server.dict:
-            if server.dict[key].is_dead:
-                server.dict[key] = Suggest(server, key)
+        with atomic:
+            if key in server.dict:
+                if server.dict[key].is_dead:
+                    server.dict[key] = Suggest(server, key)
+                else:
+                    if not isinstance(server.dict[key], Suggest):
+                        return 'WRONG VALUE'
             else:
-                if not isinstance(server.dict[key], Suggest):
-                    return 'WRONG VALUE'
-        else:
-            server.dict[key] = Suggest(server, key)
-        value = server.dict[key]
+                server.dict[key] = Suggest(server, key)
         for string in strings:
             if len(string) < 3:
                 continue
             else:
-
                 for trigram in iter_trigrams(string):
-                    if not trigram in value.trigrams:
-                        value.trigrams[trigram] = list()
-                    value.trigrams[trigram].append(string)
+                    with atomic:
+                        value = server.dict[key]
+                        if not trigram in value.trigrams:
+                            value.trigrams[trigram] = list()
+                        value.trigrams[trigram].append(string)
         return 'OK'
 
     @check_if_key_exists
-    @with_atomic
     def SUGGEST(self, string, limit=10):
         suggestions = dict()
         for trigram in iter_trigrams(string):
-            strings = self.trigrams.get(trigram, [])
+            with atomic:
+                strings = self.trigrams.get(trigram, [])
             for s in strings:
                 try:
                     suggestions[s] += 1

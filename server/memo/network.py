@@ -25,3 +25,6 @@ class ServerSocket(object):
         cnx = self.sock.accept()[0]  # leave the address
         with atomic:
             self.queue.insert(0, cnx)
+
+    def close(self):
+        self.sock.close()
