@@ -1,10 +1,12 @@
 from __pypy__.thread import atomic
+
+import time
 from thread import start_new_thread
 
 from memo_client import MemoClient
 
 
-memo = MemoClient('127.0.0.1', 9511)  # thread safe
+memo = MemoClient('127.0.0.1', 9515)  # thread safe
 mistakes = list()
 
 print 'start training'
@@ -19,6 +21,7 @@ print 'training done'
 count = 0
 total = len(mistakes)
 running = 0
+
 
 def suggest():
     global count, mistakes, running
@@ -37,8 +40,12 @@ def suggest():
 
 
 print 'start spellchecking'
-for x in range(5):
+for x in range(2):
     start_new_thread(suggest, ())
+
+
+time.sleep(10)
+
 
 while running:
     pass

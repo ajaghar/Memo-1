@@ -1,7 +1,7 @@
 from memo_client import MemoClient
 
 
-memo = MemoClient('127.0.0.1', 9512)  # thread safe
+memo = MemoClient('127.0.0.1', 9517)  # thread safe
 mistakes = dict()
 
 print 'start training'
